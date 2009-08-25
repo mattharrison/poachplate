@@ -1,0 +1,7 @@
+Unpack the package
+
+Run
+
+``python setup.py install``
+
+(or use your favorite install mechanism)

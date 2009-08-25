@@ -1,0 +1,83 @@
+# Copyright (c) 2009 Matt Harrison
+
+Intro
+=====
+
+Poachplate is a script for generating python scripts.  Really it just
+generates boilerplate content, such as:
+
+* setup.py
+* bin/script
+* scriptlib/__init__.py
+* test/test.py
+* README
+* LICENSE
+
+Some of the content is just "FILL IN", but this can be fixed by
+setting the appropriate values in a ``~/.config/poachplate.ini`` file,
+that looks like this::
+
+  [properties]
+  author : FILL IN
+  email : FILL IN
+  version : 0.1
+
+Installation
+============
+
+Unpack the tarball and run::
+
+  python setup.py install
+
+Invocation
+==========
+
+Invoke the script like so::
+
+  poachplate FooBar
+
+And it will create the following "Compromise Layout", where there is a
+script but the implementation goes in ``scriptlib/__init__.py`` (or
+where you want to put it).  The idea is to have a script in the PATH
+that is executable (so people can run it), as well as a package in
+PYTHONPATH, so people can import/test/reuse the code.
+
+Here's the layout::
+
+  FooBar/
+    INSTALL
+    LICENSE
+    README
+    MANIFEST.in
+    setup.py
+    bin/
+      foobar # small wrapper
+    foobarlib/
+      __init__.py # put implementation here
+      meta.py # version/author/email
+    test/
+      test.py
+
+Todo
+====
+
+* Be verbose during creating, ie: creating "FooBar/"....
+* Use templates in files for content
+* Fix issues people have
+* Add features people want
+* Perhaps OT.  Provide a library of common script functions.
+* Implement non-manual tests ;)
+
+Changelog
+=========
+
+0.1 - Feb 12, 2009 
+------------------
+
+Initial release
+
+0.1.4 - June 2, 2009
+--------------------
+
+Various bug fixes - Thanks to Chad Harrington
+
