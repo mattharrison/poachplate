@@ -19,10 +19,52 @@ version : 0.1
 CONFIG_LOC = os.path.expanduser('~/.config/poachplate.ini')
 YEAR = datetime.date.today().strftime('%Y')
 
-class _Unset(object): 
+MAKEFILE="""# variables to use sandboxed binaries
+PIP := env/bin/pip
+NOSE := env/bin/nosetests
+PY := env/bin/python
+
+# -------- Environment --------
+# env is a folder so no phony is necessary
+env:
+	virtualenv env
+
+.PHONY: deps
+deps:
+	$(PIP) install -r requirements.txt
+
+# rm_env isn't a file so it needs to be marked as "phony"
+.PHONY: rm_env
+rm_env:
+	rm -rf env
+
+# --------- Testing ----------
+
+.PHONY: test
+test: nose deps
+	$(NOSE) test
+
+# nose depends on the nosetests binary
+nose: $(NOSE)
+$(NOSE):
+	$(PIP) install nose
+
+# --------- PyPi ----------
+
+.PHONY: build
+build:
+	$(PY) setup.py sdist
+
+.PHONY: upload
+upload:
+	$(PY) setup.py sdist upload
+
+"""
+
+class _Unset(object):
     """ We need a value to represent unset for configuration.  None
     doesn't really work since the user might want None to be a valid
-    value 
+    value
     """
     pass
 
@@ -50,7 +92,7 @@ def cascade_value(opt=None, opt_name=None, # optparse
         except KeyError, e:
             pass
     if not isinstance(value, _Unset):
-        return value	  
+        return value
 
     # get from config file
     if cfg and cfg_section and cfg_name:
@@ -92,16 +134,16 @@ class Package(object):
             cfg = ConfigParser.ConfigParser()
             cfg.read(cfg_loc)
 
-        self.author = cascade_value(opt=opt, opt_name='author', 
+        self.author = cascade_value(opt=opt, opt_name='author',
                                     cfg=cfg, cfg_section='properties', cfg_name='author',
                                     default='FILL IN')
-        self.version = cascade_value(opt=opt, opt_name='version', 
+        self.version = cascade_value(opt=opt, opt_name='version',
                                     cfg=cfg, cfg_section='properties', cfg_name='version',
                                     default='0.1')
-        self.email = cascade_value(opt=opt, opt_name='email', 
+        self.email = cascade_value(opt=opt, opt_name='email',
                                     cfg=cfg, cfg_section='properties', cfg_name='email',
                                     default='FILL IN')
-     
+
     def generate(self):
         if os.path.exists(self.name):
             raise NameError, '%s project directory already exists' % self.name
@@ -112,7 +154,7 @@ class Package(object):
 
         script_copyright = '# Copyright (c) %(year)s %(author)s' % {'author':self.author,'year':YEAR}
 
-        os.makedirs(self.libname)        
+        os.makedirs(self.libname)
         create_file(fout(os.path.join(self.libname, '__init__.py')), '''#!/usr/bin/env python
 %(script_copyright)s
 
@@ -132,6 +174,8 @@ if __name__ == '__main__':
 
         self.gen_meta(script_copyright)
         self.gen_setup(script_copyright)
+        create_file(fout('requirements.txt'), '')
+        create_file(fout('Makefile'), MAKEFILE)
         create_file(fout('README'), 'FILL IN')
         create_file(fout('LICENSE'), 'FILL IN')
         create_file(fout('INSTALL'), 'FILL IN')
@@ -161,7 +205,7 @@ if __name__ == '__main__':
 """ %{'libname':self.libname,
       'libnamecap':self.libname.capitalize(),
       'script_copyright':script_copyright})
-        
+
 
     def gen_script(self, script_copyright):
         """
@@ -183,11 +227,11 @@ if __name__ == '__main__':
         sys.exit(%(libname)s.main(sys.argv))
     except Exception, e:
         sys.stderr.write('%%s\\n'%%str(e))
-        sys.exit(1)  
+        sys.exit(1)
 
 """ % {'libname':self.libname,
        'script_copyright':script_copyright})
-        
+
     def gen_meta(self, script_copyright):
         create_file(fout(os.path.join(self.libname, 'meta.py')),"""%(script_copyright)s
 
@@ -236,9 +280,8 @@ in it, they will be converted to lowercase for package and script names."""
         p.generate()
     else:
         parser.print_help()
-        
-    
+
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv) or 0)
-    
