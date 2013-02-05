@@ -9,7 +9,7 @@ env:
 	virtualenv env
 
 .PHONY: deps
-deps:
+deps: env
 	$(PIP) install -r requirements.txt
 
 # rm_env isn't a file so it needs to be marked as "phony"
@@ -25,15 +25,15 @@ test: nose deps
 
 # nose depends on the nosetests binary
 nose: $(NOSE)
-$(NOSE):
+$(NOSE): env
 	$(PIP) install nose
 
 # --------- PyPi ----------
 
 .PHONY: build
-build:
+build: env
 	$(PY) setup.py sdist
 
 .PHONY: upload
-upload:
+upload: env
 	$(PY) setup.py sdist upload
