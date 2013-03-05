@@ -122,7 +122,7 @@ rm_env:
 
 .PHONY: test
 test: nose deps
-	$(NOSE) test
+	$(NOSE)
 
 # nose depends on the nosetests binary
 nose: $(NOSE)
