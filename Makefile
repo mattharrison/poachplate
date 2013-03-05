@@ -17,8 +17,14 @@ deps: env
 rm_env:
 	rm -rf env
 
-# --------- Testing ----------
 
+# --------- Dev --------------------
+.PHONY: dev
+dev: deps
+	$(PY) setup.py develop
+
+
+# --------- Testing ----------
 .PHONY: test
 test: nose deps
 	$(NOSE) test
@@ -28,12 +34,16 @@ nose: $(NOSE)
 $(NOSE): env
 	$(PIP) install nose
 
-# --------- PyPi ----------
 
+# --------- PyPi ----------
 .PHONY: build
 build: env
 	$(PY) setup.py sdist
 
 .PHONY: upload
 upload: env
-	$(PY) setup.py sdist upload
+	$(PY) setup.py sdist register upload
+
+.PHONY: clean
+clean:
+	rm -rf dist *.egg-info
