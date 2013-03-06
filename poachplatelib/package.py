@@ -100,7 +100,7 @@ setup(name='%(name)s',
 """
 
 MAKEFILE = """# variables to use sandboxed binaries
-PIP := env/bin/pip
+PIP := PIP_DOWNLOAD_CACHE=$${HOME}/.pip_download_cache env/bin/pip
 NOSE := env/bin/nosetests
 PY := env/bin/python
 
