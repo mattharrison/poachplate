@@ -27,12 +27,16 @@ Installation
 
 Unpack the tarball and run::
 
-  python setup.py install
+  make dev
+
+This will create a virtual environment ``env`` and run ``python
+setup.py develop`` inside of it.
 
 Invocation
 ==========
 
-Invoke the script like so::
+Invoke the script (after activating the virtualenv -
+``env/bin/activate``) like so::
 
   poachplate FooBar
 
@@ -66,12 +70,11 @@ Todo
 * Fix issues people have
 * Add features people want
 * Perhaps OT.  Provide a library of common script functions.
-* Implement non-manual tests ;)
 
 Changelog
 =========
 
-0.1 - Feb 12, 2009 
+0.1 - Feb 12, 2009
 ------------------
 
 Initial release
@@ -81,3 +84,6 @@ Initial release
 
 Various bug fixes - Thanks to Chad Harrington
 
+0.1.5 - March 7, 2013
+
+Retweaking, py3 fixes
