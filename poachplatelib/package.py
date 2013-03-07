@@ -84,8 +84,8 @@ __email__ = '%(email)s'
 """
 
 SETUP = """%(script_copyright)s
-from distutils.core import setup
-#from setuptools import setup
+#from distutils.core import setup
+from setuptools import setup
 
 from %(libname)s import meta
 
@@ -282,7 +282,7 @@ class Package(object):
                 fout.write(MAKEFILE)
 
             for fname in ['README', 'LICENSE', 'INSTALL']:
-                with open(fname, 'w'):
+                with open(fname, 'w') as fout:
                     fout.write('FILL IN')
 
             with open('MANIFEST.in', 'w') as fout:
@@ -310,7 +310,7 @@ in it, they will be converted to lowercase for package and script names."""
 
     if len(sys.argv) > 1:
         p = Package(sys.argv[1], opt=opt, cfg_loc=CONFIG_LOC)
-        p.generate()
+        p.write()
     else:
         parser.print_help()
 
