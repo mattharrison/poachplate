@@ -125,15 +125,19 @@ rm_env:
 	rm -rf env
 
 # --------- Testing ----------
-
 .PHONY: test
-test: nose deps
+test: deps $(NOSE)
 	$(NOSE)
 
 # nose depends on the nosetests binary
-nose: $(NOSE)
-$(NOSE):
-	$(PIP) install nose
+$(NOSE): packages/.done-nose
+	$(PIP) install --upgrade --no-index --find-links=file://$${PWD}/packages nose
+
+packages/.done-nose:
+	# need to drop this marker. otherwise it
+	# downloads everytime
+	$(PIP) install --download packages nose;\
+	touch packages/.done-nose
 
 # --------- PyPi ----------
 

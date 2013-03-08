@@ -8,22 +8,7 @@ class TestScript(unittest.TestCase):
         self.p.generate()
 
     def test_setup(self):
-        self.assertEqual(self.p._setup, """# Copyright (c) 2013 FILL IN
-from distutils.core import setup
-#from setuptools import setup
-
-from testlib import meta
-
-setup(name='test',
-      version=meta.__version__,
-      author=meta.__author__,
-      description='FILL IN',
-      scripts=['bin/test'],
-      package_dir={'testlib':'testlib'},
-      packages=['testlib'],
-)
-""")
-
+        self.assertEqual(self.p._setup, "# Copyright (c) 2013 FILL IN\n#from distutils.core import setup\nfrom setuptools import setup\n\nfrom testlib import meta\n\nsetup(name='test',\n      version=meta.__version__,\n      author=meta.__author__,\n      description='FILL IN',\n      scripts=['bin/test'],\n      package_dir={'testlib':'testlib'},\n      packages=['testlib'],\n)\n")
     def test_script(self):
         self.assertEqual(self.p._script, """#!/usr/bin/env python
 # Copyright (c) 2013 FILL IN
