@@ -111,7 +111,9 @@ env:
 
 .PHONY: deps
 deps: env
-	$(PIP) install -r requirements.txt
+	mkdir packages; \
+	$(PIP) install --download packages -r requirements.txt; \
+	$(PIP) install --no-index --find-links=file://$${PWD}/packages -r requirements.txt
 
 # rm_env isn't a file so it needs to be marked as "phony"
 .PHONY: rm_env
