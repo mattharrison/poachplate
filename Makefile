@@ -1,5 +1,6 @@
 # variables to use sandboxed binaries
-PIP := PIP_DOWNLOAD_CACHE=$${HOME}/.pip_download_cache env/bin/pip
+#PIP := PIP_DOWNLOAD_CACHE=$${HOME}/.pip_download_cache env/bin/pip
+PIP := env/bin/pip
 NOSE := env/bin/nosetests
 PY := env/bin/python
 
@@ -9,10 +10,14 @@ env:
 	virtualenv env
 
 .PHONY: deps
-deps: env
-	mkdir packages; \
-	$(PIP) install --download packages -r requirements.txt; \
+deps: env packages/.done
+	# see http://tartley.com/?p=1423&cpage=1
 	$(PIP) install --no-index --find-links=file://$${PWD}/packages -r requirements.txt
+
+packages/.done:
+	mkdir packages; \
+	$(PIP) install --download packages -r requirements.txt;\
+	touch packages/.done
 
 # rm_env isn't a file so it needs to be marked as "phony"
 .PHONY: rm_env
